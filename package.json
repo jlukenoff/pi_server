@@ -1,0 +1,58 @@
+{
+  "name": "MERN-boilerplate",
+  "version": "1.0.0",
+  "description": "Boilerplate for a full-stack MERN app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "jest",
+    "start-dev": "nodemon --inspect server/index.js",
+    "react-dev": "webpack --watch",
+    "build": "webpack --mode=production"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "<rootDir>/server/*.{js,jsx}"
+    ],
+    "coverageDirectory": "<rootDir>/__test__/coverage/",
+    "resolver": null,
+    "testMatch": [
+      "**/__test__/*.js"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlukenoff/MERN-boilerplate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jlukenoff/MERN-boilerplate/issues"
+  },
+  "homepage": "https://github.com/jlukenoff/MERN-boilerplate#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "jest": "^23.6.0",
+    "mongoose": "^5.3.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "supertest": "^3.3.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-airbnb": "^2.6.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^1.0.0",
+    "style-loader": "^0.23.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
+  }
+}
