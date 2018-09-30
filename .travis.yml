@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- 'node'
+- '7'
+cache:
+  directories:
+  - node_modules
+# deploy:
+#   provider: heroku
+#   api_key: "heroku api key"
+#   on: production
+#   app: fierce-garden-72214
+before_install:
+- npm i -g npm@6.2.0
+install:
+- npm install
+script:
+- npm test
