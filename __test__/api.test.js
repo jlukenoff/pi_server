@@ -1,5 +1,4 @@
 const request = require('supertest');
-const { describe, it } = require('jest');
 const { server } = require('../server/index.js');
 
 describe('GET /', () => {
