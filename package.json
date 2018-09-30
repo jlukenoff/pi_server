@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node server/index.js",
     "test": "jest",
-    "start-dev": "nodemon --inspect server/index.js",
-    "react-dev": "webpack --watch",
+    "start:dev": "webpack-dev-server",
+    "react:dev": "webpack --watch",
     "build": "webpack --mode=production"
   },
   "jest": {
@@ -40,7 +40,8 @@
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "supertest": "^3.3.0"
+    "supertest": "^3.3.0",
+    "webpack-dev-server": "^3.1.9"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
