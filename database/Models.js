@@ -1,8 +1,11 @@
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose').connect('mongodb://127.0.0.1/db');
 
-const schema = new Schema({
+const { Schema } = mongoose;
+
+const ModelSchema = new Schema({
   _id: Number,
   name: String,
+  created: { type: Date, default: Date.now },
 });
 
-module.exports = model('model', schema);
+module.exports = { Model: mongoose.model('Model', ModelSchema) };
