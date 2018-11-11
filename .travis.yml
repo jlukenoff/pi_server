@@ -7,9 +7,10 @@ cache:
   - node_modules
 # deploy:
 #   provider: heroku
-#   api_key: "heroku api key"
-#   on: production
-#   app: fierce-garden-72214
+#   api_key: "from terminal run 'travis encrypt $(heroku api_key) --add deploy.api_key'
+#   on: dist
+#   app: my-app-123
+#   run: npm run build
 before_install:
 - npm i -g npm@6.2.0
 install:

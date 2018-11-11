@@ -8,7 +8,8 @@
     "test": "jest",
     "start:dev": "nodemon server/index.js",
     "react:dev": "webpack-dev-server",
-    "build": "webpack --mode=production"
+    "build": "webpack -p",
+    "heroku-postbuild": "webpack -p"
   },
   "jest": {
     "verbose": true,
