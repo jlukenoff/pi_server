@@ -23,7 +23,7 @@ app.post('/api/target', jsonParser, (req, res) => {
   console.log(description);
   console.log(createdBy);
   console.log(createdAt);
-_____________________________
+  console.log('------End of Data------');
   fs.appendFile(
     './data/events.csv',
     `${[summary, description, createdBy, createdAt].join('|')}\n`,

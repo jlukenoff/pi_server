@@ -1,4 +1,4 @@
-# MERN boilerplate
+# Pi Server
 
 > Custom boilerplate template for MERN stack web apps.
 
@@ -27,6 +27,7 @@ An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).
 ### Installation instructions
 
 From the root directory:
+
 ```
 npm install
 ```
