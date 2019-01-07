@@ -1,5 +1,5 @@
 {
-  "name": "MERN-boilerplate",
+  "name": "pi_server",
   "version": "1.0.0",
   "description": "Boilerplate for a full-stack MERN app",
   "main": "index.js",
@@ -25,16 +25,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jlukenoff/MERN-boilerplate.git"
+    "url": "git+https://github.com/jlukenoff/pi_server.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jlukenoff/MERN-boilerplate/issues"
+    "url": "https://github.com/jlukenoff/pi_server/issues"
   },
-  "homepage": "https://github.com/jlukenoff/MERN-boilerplate#readme",
+  "homepage": "https://github.com/jlukenoff/pi_server#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "jest": "^23.6.0",
     "merge": "^1.2.1",
@@ -43,7 +44,7 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "supertest": "^3.3.0",
-    "webpack-dev-server": "^3.1.9"
+    "webpack-dev-server": "^3.1.14"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
