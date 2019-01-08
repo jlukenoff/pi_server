@@ -12,16 +12,14 @@ app.get('/', (req, res) => {
   res.end('request received');
 });
 
-app.post('/api/target', jsonParser, (req, res) => {
+app.post('/api/trigger', jsonParser, (req, res) => {
   const {
     summary,
     description,
     created_by: createdBy,
     created_at: createdAt,
   } = req.body;
-  const {
-    Authorization
-  } = req.headers;
+  const { Authorization } = req.headers;
   console.log('summary:', summary);
   console.log('description:', description);
   console.log('createdBy:', createdBy);
@@ -32,7 +30,8 @@ app.post('/api/target', jsonParser, (req, res) => {
     './data/events.csv',
     `${[summary, description, createdBy, createdAt].join('|')}\n`,
     err => {
-      console.error(`Error writing to file: ${err}`);
+      if (err) console.error(`Error writing to file: ${err}`);
+      res.send(200, 'SUCCESS');
     }
   );
 });
