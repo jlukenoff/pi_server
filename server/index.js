@@ -19,10 +19,14 @@ app.post('/api/target', jsonParser, (req, res) => {
     created_by: createdBy,
     created_at: createdAt,
   } = req.body;
-  console.log(summary);
-  console.log(description);
-  console.log(createdBy);
-  console.log(createdAt);
+  const {
+    Authorization
+  } = req.headers;
+  console.log('summary:', summary);
+  console.log('description:', description);
+  console.log('createdBy:', createdBy);
+  console.log('createdAt:', createdAt);
+  console.log('Authorization:', Authorization);
   console.log('------End of Data------');
   fs.appendFile(
     './data/events.csv',
