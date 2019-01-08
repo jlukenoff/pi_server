@@ -1,4 +1,5 @@
-- Implement routes for automate.io
+- Add pm2 configuration to startup with watch enabled after reboot
+
 - Add functions to update home IoT
 - Add https to nginx
 - Add auth to allow sign in (consider OAUTH?)
