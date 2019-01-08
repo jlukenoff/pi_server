@@ -27,11 +27,11 @@ app.post('/api/trigger', jsonParser, (req, res) => {
   console.log('Authorization:', Authorization);
   console.log('------End of Data------');
   fs.appendFile(
-    './data/events.csv',
+    path.join('.', 'data/events.csv'),
     `${[summary, description, createdBy, createdAt].join('|')}\n`,
     err => {
       if (err) console.error(`Error writing to file: ${err}`);
-      res.send(200, 'SUCCESS');
+      res.send('SUCCESS');
     }
   );
 });
