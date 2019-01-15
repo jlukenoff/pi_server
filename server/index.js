@@ -2,40 +2,54 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const jsonParser = require('body-parser').json();
+const hueControls = require('./hue_controls');
+const { authToken } = require('../credentials.json');
+const atob = require('atob');
 
 const app = express();
 
 // Config
 app.use(express.static(path.resolve(__dirname, '../html')));
+app.use(jsonParser);
 
 app.get('/', (req, res) => {
   res.end('request received');
 });
 
-app.post('/api/trigger', jsonParser, (req, res) => {
+app.post('/api/trigger', auth.ensureRequest, (req, res) => {
   const {
     summary,
     description,
+    begins_at: beginsAt,
     created_by: createdBy,
     created_at: createdAt,
   } = req.body;
-  const { Authorization } = req.headers;
-  console.log('summary:', summary);
-  console.log('description:', description);
-  console.log('createdBy:', createdBy);
-  console.log('createdAt:', createdAt);
-  console.log('Authorization:', Authorization);
-  console.log('------End of Data------');
-  fs.appendFile(
-    path.join('/home/pi', 'Desktop', 'events.csv'),
-    `${[summary, description, createdBy, createdAt].join('|')}\n`,
-    err => {
-      if (err) console.error(`Error writing to file: ${err}`);
-      res.send('SUCCESS');
-    }
-  );
+  const token = req.header('Authorization');
+  if (atob(token) !== authToken) {
+    res.status(401);
+  }
+  console.log(token);
+  if (process.env.NODE_ENV === 'production') {
+    fs.appendFile(
+      path.join('/home/pi', 'Desktop', 'events.csv'),
+      `${[
+        summary,
+        description,
+        createdBy,
+        createdAt,
+        beginsAt,
+        new Date().toISOString(),
+      ].join('|')}\n`,
+      err => {
+        if (err) console.error(`Error writing to file: ${err}`);
+        res.send('SUCCESS');
+      }
+    );
+  } else {
+    res.send('SUCCESS');
+  }
 });
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 const server = app.listen(port, () =>
   console.log(`Server running on port ${port}`)
