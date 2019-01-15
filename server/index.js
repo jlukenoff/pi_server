@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
   res.end('request received');
 });
 
-app.post('/api/trigger', auth.ensureRequest, (req, res) => {
+app.post('/api/trigger', (req, res) => {
   const {
     summary,
     description,
