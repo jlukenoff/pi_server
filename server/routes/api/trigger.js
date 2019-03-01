@@ -7,6 +7,7 @@ const { authToken } = require('./credentials.json');
 const atob = require('atob');
 
 router.post('/', (req, res) => {
+  // extract values from body
   const {
     summary,
     description,
@@ -14,14 +15,19 @@ router.post('/', (req, res) => {
     created_by: createdBy,
     created_at: createdAt,
   } = req.body;
+
+  // parse auth
   const token = req.header('Authorization');
   const unamePass = atob(token.split(' ')[1]);
   console.log(unamePass);
+
+  // verify auth
   if (unamePass !== authToken) {
     res.sendStatus(401);
   }
-  console.log(token);
+
   if (process.env.NODE_ENV === 'production') {
+    // write to logs
     fs.appendFile(
       path.join('/home/pi', 'Desktop', 'events.csv'),
       `${[
@@ -33,9 +39,11 @@ router.post('/', (req, res) => {
         new Date().toISOString(),
       ].join('|')}\n`,
       err => {
-        if (err) console.error(`Error writing to file: ${err}`);
-        // TODO: make calls to hue functions here
-        res.send('SUCCESS');
+        if (err) console.error(`Error writing to log: ${err}`);
+        // TODO:
+        // parse arguments received in API call
+        // make calls to IoT
+        res.send('SUCCESS: wrote to logs');
       }
     );
   } else {
