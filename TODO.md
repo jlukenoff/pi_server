@@ -2,6 +2,7 @@
 
   - Trouble shoot watch configurations
 
+- Clean up code - esp. better back end routing
 - Add functions to update home IoT
 - Add https to nginx
 - Add auth to allow sign in (consider OAUTH?)
