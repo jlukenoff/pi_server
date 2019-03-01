@@ -1,19 +1,12 @@
 const express = require('express');
-const path = require('path');
+const router = express.Router();
 const fs = require('fs');
-const jsonParser = require('body-parser').json();
+// modules for interacting w/the HUE bridge api
+const hueControls = require('./hue_controls');
+const { authToken } = require('./credentials.json');
+const atob = require('atob');
 
-const app = express();
-
-// Config
-app.use(express.static(path.resolve(__dirname, '../html')));
-app.use(jsonParser);
-
-// Routes
-app.use(require('./routes'));
-
-// This route has been moved to ./routes/api/trigger
-/* app.post('/api/trigger', (req, res) => {
+router.post('/', (req, res) => {
   const {
     summary,
     description,
@@ -22,8 +15,10 @@ app.use(require('./routes'));
     created_at: createdAt,
   } = req.body;
   const token = req.header('Authorization');
-  if (atob(token) !== authToken) {
-    res.status(401);
+  const unamePass = atob(token.split(' ')[1]);
+  console.log(unamePass);
+  if (unamePass !== authToken) {
+    res.sendStatus(401);
   }
   console.log(token);
   if (process.env.NODE_ENV === 'production') {
@@ -39,19 +34,15 @@ app.use(require('./routes'));
       ].join('|')}\n`,
       err => {
         if (err) console.error(`Error writing to file: ${err}`);
+        // TODO: make calls to hue functions here
         res.send('SUCCESS');
       }
     );
   } else {
-    res.send('SUCCESS');
+    res.send(
+      `SUCCESS: received payload - ${JSON.stringify(req.body, null, 2)}`
+    );
   }
-}); */
-const port = process.env.PORT || 8080;
+});
 
-const server = app.listen(port, () =>
-  console.log(`Server running on port ${port}`)
-);
-
-if (process.env.NODE_ENV === 'test') server.close();
-
-module.exports = { server };
+module.exports = router;
