@@ -48,9 +48,11 @@ app.use(require('./routes'));
 }); */
 const port = process.env.PORT || 8080;
 
-const server = app.listen(port, () =>
-  console.log(`Server running on port ${port}`)
-);
+const server = app.listen(port, () => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Server running on port ${port}`);
+  }
+});
 
 if (process.env.NODE_ENV === 'test') server.close();
 
