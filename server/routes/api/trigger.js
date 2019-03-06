@@ -43,6 +43,9 @@ router.post('/', (req, res) => {
         // TODO:
         // parse arguments received in API call
         // make calls to IoT
+        console.log(
+          `successfully processed payload: ${JSON.stringify(req.body, null, 2)}`
+        );
         res.send('SUCCESS: wrote to logs');
       }
     );
