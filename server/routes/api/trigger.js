@@ -46,6 +46,7 @@ router.post('/', (req, res) => {
                 2
               )}`
             );
+            return res.send('SUCCESS');
           });
         } else {
           return toggleLight(lightID, on, function(err, hueResponse) {
