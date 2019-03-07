@@ -14,8 +14,9 @@ const atob = require('atob');
 // POST - used to toggle or adjust lights from a calendar event
 router.post('/', (req, res) => {
   const { service, csvArgs, beginsAt, createdAt, createdBy } = JSON.parse(
-    req.body.replace(/\\"/g, '"').replace(/\\\\n/g, '\n')
+    req.body.replace(/\\"/g, '"')
   );
+
   // The above is a hack used to remove escape characters from the automate.io service payload
 
   const token = req.header('Authorization');
@@ -26,11 +27,13 @@ router.post('/', (req, res) => {
   }
 
   if (service === 'LIGHT') {
+    console.log(csvArgs);
     csvArgs
-      .split('\n')
+      // the below is also used to remove parse the newline - fucking automate.io
+      .split('\\n')
       .slice(1)
       .forEach(row => {
-        console.log('called service functions');
+        console.log('row', row);
         const [lightID, bri, on] = row.split('|');
         if (bri) {
           return adjustLight(lightID, bri, function(err, hueResponse) {
