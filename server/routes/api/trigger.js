@@ -14,9 +14,7 @@ const atob = require('atob');
 // POST - used to toggle or adjust lights from a calendar event
 router.post('/', (req, res) => {
   console.log(req.body);
-  const { service, csvArgs, beginsAt, createdAt, createdBy } = JSON.parse(
-    req.body.replace(/\\"/g, '"')
-  );
+  const [service, csvArgs] = req.body.split(',');
 
   // The above is a hack used to remove escape characters from the automate.io service payload
 
