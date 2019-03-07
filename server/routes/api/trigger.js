@@ -5,18 +5,18 @@ const path = require('path');
 // modules for interacting w/the HUE bridge api
 const { getAllLights, adjustLight, toggleLight } = require('./hue_controls');
 const { authToken } = require('./credentials.json');
+const textParser = require('body-parser').text();
+
+router.use(textParser);
 
 const atob = require('atob');
 
 // POST - used to toggle or adjust lights from a calendar event
 router.post('/', (req, res) => {
-  const {
-    summary: service,
-    description: csvArgs,
-    begins_at: beginsAt,
-    created_by: createdBy,
-    created_at: createdAt,
-  } = req.body;
+  const { service, csvArgs, beginsAt, createdAt, createdBy } = JSON.parse(
+    req.body.replace(/\\"/g, '"')
+  );
+  // The above is a hack used to remove escape characters from the automate.io service payload
 
   const token = req.header('Authorization');
   const unamePass = atob(token.split(' ')[1]);
@@ -46,7 +46,7 @@ router.post('/', (req, res) => {
                 2
               )}`
             );
-            return res.send('SUCCESS');
+            return res.json(hueResponse);
           });
         } else {
           return toggleLight(lightID, on, function(err, hueResponse) {
@@ -65,10 +65,12 @@ router.post('/', (req, res) => {
 
             console.log('----------');
 
-            return res.send('SUCCESS');
+            return res.json(hueResponse);
           });
         }
       });
+  } else {
+    res.sendStatus(422);
   }
 
   // write to logs
