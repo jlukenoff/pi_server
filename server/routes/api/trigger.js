@@ -7,7 +7,7 @@ const { getAllLights, adjustLight, toggleLight } = require('./hue_controls');
 const { authToken } = require('./credentials.json');
 const textParser = require('body-parser').text();
 
-router.use(textParser);
+// router.use(textParser);
 
 const atob = require('atob');
 
