@@ -27,52 +27,59 @@ router.post('/', (req, res) => {
 
   if (service === 'LIGHT') {
     console.log(csvArgs);
-    csvArgs
-      // the below is also used to remove parse the newline - fucking automate.io
-      .split('\\n')
-      .slice(1)
-      .forEach(row => {
-        console.log('row', row);
-        const [lightID, bri, on] = row.split('|');
-        if (bri) {
-          return adjustLight(lightID, bri, function(err, hueResponse) {
-            if (err) {
-              return console.error(
-                `Error adjusting light ${lightID} to brightness ${bri}: ${err}`
+    Promise.all(
+      csvArgs
+        // the below is also used to remove parse the newline - fucking automate.io
+        .split('\\n')
+        .slice(1)
+        .map(row => {
+          console.log('row', row);
+          const [lightID, bri, on] = row.split('|');
+          if (bri) {
+            return adjustLight(lightID, bri, function(err, hueResponse) {
+              if (err) {
+                return console.error(
+                  `Error adjusting light ${lightID} to brightness ${bri}: ${err}`
+                );
+              }
+              console.log(
+                `Successfully adjusted light id ${lightID} to brightness ${bri} (0-254 range).\nHUE response: ${JSON.stringify(
+                  hueResponse,
+                  null,
+                  2
+                )}`
               );
-            }
-            console.log(
-              `Successfully adjusted light id ${lightID} to brightness ${bri} (0-254 range).\nHUE response: ${JSON.stringify(
-                hueResponse,
-                null,
-                2
-              )}`
-            );
-            return res.json(hueResponse);
-          });
-        } else {
-          return toggleLight(lightID, on, function(err, hueResponse) {
-            if (err) {
-              console.error(
-                `Error toggling light ${lightID} to state on = ${on}: ${err}`
+              return hueResponse;
+            });
+          } else {
+            return toggleLight(lightID, on, function(err, hueResponse) {
+              if (err) {
+                return console.error(
+                  `Error toggling light ${lightID} to state on = ${on}: ${err}`
+                );
+              }
+              console.log(
+                `Successfully toggling light id ${lightID} to state = ${on} (0-254 range).\nHUE response: ${JSON.stringify(
+                  hueResponse,
+                  null,
+                  2
+                )}`
               );
-            }
-            console.log(
-              `Successfully toggling light id ${lightID} to state = ${on} (0-254 range).\nHUE response: ${JSON.stringify(
-                hueResponse,
-                null,
-                2
-              )}`
-            );
 
-            console.log('----------');
-
-            return res.json(hueResponse);
-          });
-        }
-      });
+              console.log('----------');
+              return hueResponse;
+            });
+          }
+        })
+    )
+      .then(d => res.json(Array.from(d)))
+      .catch(e =>
+        console.error(
+          `Error updating lights (/server/routes/api/trigger:73): ${e}`
+        )
+      );
   } else {
-    res.sendStatus(422);
+    return res.sendStatus(422);
   }
 
   // write to logs

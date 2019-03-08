@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const { HUE_USERNAME } = require('../credentials.json');
 
 const getAllLights = done => {
-  fetch(`http://10.0.0.218/api/${HUE_USERNAME}/lights`)
+  return fetch(`http://10.0.0.218/api/${HUE_USERNAME}/lights`)
     .then(chunk => chunk.json())
     .then(data => done(null, data))
     .catch(err => done(err));
@@ -12,10 +12,13 @@ const adjustLight = (lightID, bri, done) => {
   if (typeof bri !== 'number') {
     bri = Number(bri);
   }
-  fetch(`http://10.0.0.218/api/${HUE_USERNAME}/lights/${lightID}/state`, {
-    method: 'PUT',
-    body: JSON.stringify({ bri }),
-  })
+  return fetch(
+    `http://10.0.0.218/api/${HUE_USERNAME}/lights/${lightID}/state`,
+    {
+      method: 'PUT',
+      body: JSON.stringify({ bri }),
+    }
+  )
     .then(chunk => chunk.json())
     .then(data => done(null, data))
     .catch(err => done(err));
@@ -25,10 +28,13 @@ const toggleLight = (lightID, on, done) => {
   if (typeof on !== 'boolean') {
     on = 'true' === on;
   }
-  fetch(`http://10.0.0.218/api/${HUE_USERNAME}/lights/${lightID}/state`, {
-    method: 'PUT',
-    body: JSON.stringify({ on }),
-  })
+  return fetch(
+    `http://10.0.0.218/api/${HUE_USERNAME}/lights/${lightID}/state`,
+    {
+      method: 'PUT',
+      body: JSON.stringify({ on }),
+    }
+  )
     .then(chunk => chunk.json())
     .then(data => done(null, data))
     .catch(err => done(err));
