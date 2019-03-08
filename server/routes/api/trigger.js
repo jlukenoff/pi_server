@@ -18,6 +18,7 @@ router.post('/', (req, res) => {
 
   // The above is a hack used to remove escape characters from the automate.io service payload
 
+  console.log(req.headers);
   const token = req.header('Authorization');
   const unamePass = atob(token.split(' ')[1]);
   console.log(unamePass);
