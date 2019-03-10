@@ -1,5 +1,5 @@
 #image to build upon
-FROM node:latest
+FROM node:7.6-alpine
 
 #make the directory within container for source code to live
 RUN mkdir -p /src/app
