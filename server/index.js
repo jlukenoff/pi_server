@@ -12,6 +12,8 @@ app.use(jsonParser);
 // Routes
 app.use(require('./routes'));
 
+app.use('/*', (req, res) => res.redirect('/'));
+
 const port = process.env.PORT || 8080;
 
 const server = app.listen(port, () => {
