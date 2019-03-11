@@ -1,5 +1,5 @@
 #image to build upon
-FROM node:7.6-alpine
+FROM arm32v7/node:8.15-stretch
 
 #make the directory within container for source code to live
 RUN mkdir -p /src/app
