@@ -1,5 +1,5 @@
 #image to build upon
-FROM arm32v7/node:8.15-stretch
+FROM arm32v7/node
 
 #make the directory within container for source code to live
 RUN mkdir -p /src/app
@@ -12,9 +12,6 @@ COPY . /src/app
 
 #Install dependencies
 RUN npm install
-
-#Build JS packages
-RUN npm run build
 
 #Expose container port
 EXPOSE 8080
