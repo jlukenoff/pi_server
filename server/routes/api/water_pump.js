@@ -14,3 +14,5 @@ router.post('/', (req, res) => {
     res.json({ status: 'SUCCESS', message: `Pump was on for ${timeOn}` });
   }, timeOn);
 });
+
+module.exports = router;
