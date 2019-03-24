@@ -1,5 +1,4 @@
 const express = require('express');
-const { Gpio } = require('onoff');
 
 const router = express.Router();
 

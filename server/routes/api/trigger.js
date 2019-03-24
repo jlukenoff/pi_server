@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
@@ -50,7 +51,7 @@ router.post('/', (req, res) => {
               );
               return hueResponse;
             });
-          } else {
+          } 
             return toggleLight(lightID, on, function(err, hueResponse) {
               if (err) {
                 return console.error(
@@ -68,7 +69,7 @@ router.post('/', (req, res) => {
               console.log('----------');
               return hueResponse;
             });
-          }
+          
         })
     )
       .then(d => res.json(Array.from(d)))
