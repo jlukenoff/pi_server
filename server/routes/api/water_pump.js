@@ -11,6 +11,7 @@ router.post('/', (req, res) => {
   console.log(`requestBody: ${requestBody}`);
   return fetch('http://10.0.0.180:3000/api/pump', {
     method: 'POST',
+    'Content-Type': 'application/json;',
     body: requestBody,
   })
     .then(c => c.json())
