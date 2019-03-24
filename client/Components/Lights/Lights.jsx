@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
+import LightWidget from '../LightWidget/LightWidget';
 // import PropTypes from 'prop-types';
 
 const Container = styled.div`
@@ -36,18 +37,28 @@ class Lights extends Component {
   componentDidMount() {
     return fetch('/api/hue')
       .then(c => c.json())
-      .then(d => this.setState({ lights: d.lights }))
+      .then(d => {
+        this.setState({
+          lights: Object.keys(d).map(lightIdx => ({
+            isOn: d[lightIdx].state.on,
+            brightness: d[lightIdx].state.bri,
+            isReachable: d[lightIdx].state.reachable,
+            name: d[lightIdx].name,
+          })),
+        });
+      })
       .catch(e =>
         console.error(
-          `Error fetching HUE light data (/client/Components/Lights:23): ${e}`
+          `Error fetching HUE light data (/client/Components/Lights.jsx:43): ${e}`
         )
       );
   }
 
   renderLights(lightsList) {
-    return lightsList.map(l => (
-      <LightEntryContainer>{JSON.stringify(l)}</LightEntryContainer>
-    ));
+    return lightsList.map(l => {
+      console.log(JSON.stringify(l, null, 2));
+      return <LightWidget />;
+    });
   }
 
   render() {
