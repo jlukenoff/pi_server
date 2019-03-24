@@ -9,12 +9,6 @@ const Container = styled.div`
   border: 1px solid #ccc;
 `;
 
-const LightEntryContainer = styled.div`
-  width: 80%;
-  min-height: 80px;
-  margin: auto;
-`;
-
 const LightsContainer = styled.div`
   width: 100%;
   display: flex;
