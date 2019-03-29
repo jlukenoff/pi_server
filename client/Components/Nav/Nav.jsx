@@ -23,6 +23,7 @@ const NavButton = styled(Link)`
 const Nav = () => (
   <Container>
     <NavButton to="/lights">Lights</NavButton>
+    <NavButton to="/water">Water</NavButton>
   </Container>
 );
 

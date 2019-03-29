@@ -2,7 +2,7 @@ const path = require('path');
 
 const ENTRY_POINT = path.resolve(__dirname, 'client/index.jsx');
 
-const OUTPUT_DIR = path.resolve(__dirname, 'html');
+const OUTPUT_DIR = path.resolve(__dirname, 'public');
 
 module.exports = {
   entry: ENTRY_POINT,
@@ -14,7 +14,7 @@ module.exports = {
   mode: 'development',
   resolve: { extensions: ['.js', '.jsx'] },
   devServer: {
-    contentBase: path.join(__dirname, 'html'),
+    contentBase: path.join(__dirname, 'public'),
     compress: true,
     port: 8080,
   },
