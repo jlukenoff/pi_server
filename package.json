@@ -7,7 +7,7 @@
     "start": "node server/index.js",
     "test": "jest",
     "dev:start": "nodemon server/index.js",
-    "dev:client": "webpack -w",
+    "dev:build": "webpack -w",
     "build": "webpack -p",
     "docker-compose": "docker run -d -p 8080:8080 -v $(pwd):/src/app --name pi_server jlukenoff/pi_server",
     "heroku-postbuild": "webpack -p"

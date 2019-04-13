@@ -6,13 +6,13 @@ import LightWidget from '../LightWidget/LightWidget';
 const Container = styled.div`
   width: 800px;
   margin: auto;
-  border: 1px solid #ccc;
 `;
 
 const LightsContainer = styled.div`
   width: 100%;
   display: flex;
   flex-flow: column;
+  margin-bottom: 15px;
 `;
 
 const ScheduleContainer = styled.iframe`
@@ -31,14 +31,9 @@ class Lights extends Component {
   componentDidMount() {
     return fetch('/api/hue')
       .then(c => c.json())
-      .then(d => {
+      .then(lights => {
         this.setState({
-          lights: Object.keys(d).map(lightIdx => ({
-            isOn: d[lightIdx].state.on,
-            brightness: d[lightIdx].state.bri,
-            isReachable: d[lightIdx].state.reachable,
-            name: d[lightIdx].name,
-          })),
+          lights,
         });
       })
       .catch(e =>
@@ -48,11 +43,8 @@ class Lights extends Component {
       );
   }
 
-  renderLights(lightsList) {
-    return lightsList.map(l => {
-      console.log(JSON.stringify(l, null, 2));
-      return <LightWidget />;
-    });
+  renderLights(lights) {
+    return Object.entries(lights).map(lightPair =>  <LightWidget light={lightPair[1]} name={lightPair[0]}/>);
   }
 
   render() {

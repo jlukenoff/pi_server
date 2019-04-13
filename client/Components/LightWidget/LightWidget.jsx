@@ -1,20 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
-// import PropTypes from 'prop-types';
+import { LightWidgetContainer } from '../Styles/Styles'
 
-const Container = styled.div`
-  width: 90%;
-  margin: auto;
-  border: 1px solid #000;
-  min-height: 75px;
-`;
 const LightWidget = ({
-  isOn,
-  brightness,
-  name,
-  handleToggle,
-  handleAdjust,
-}) => <div>hello from react</div>;
+  light,
+  name
+}) => <LightWidgetContainer>
+  Name: {name}<br/>On: {light.state.on ? 'true' : 'false'}<br />reachable: {light.state.reachable ? 'true' : 'false'}</LightWidgetContainer>;
 
 // LightWidget.propTypes = {
 // };
