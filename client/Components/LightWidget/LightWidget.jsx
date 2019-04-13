@@ -93,7 +93,6 @@ const LightWidget = ({ light, name }) => (
         <input
           type="checkbox"
           checked={light.state.reachable && light.state.on}
-          onChange={e => null}
         />
         <span className="slider round" />
       </Switch>
