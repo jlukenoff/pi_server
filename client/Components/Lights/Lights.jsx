@@ -24,7 +24,7 @@ class Lights extends Component {
     super(props);
 
     this.state = {
-      lights: [],
+      lights: {},
     };
   }
 
@@ -44,7 +44,9 @@ class Lights extends Component {
   }
 
   renderLights(lights) {
-    return Object.entries(lights).map(lightPair =>  <LightWidget light={lightPair[1]} name={lightPair[0]}/>);
+    return Object.entries(lights).map(lightPair => (
+      <LightWidget light={lightPair[1]} name={lightPair[0]} />
+    ));
   }
 
   render() {
