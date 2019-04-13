@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
@@ -35,7 +36,7 @@ router.post('/', (req, res) => {
         .map(row => {
           const [lightID, bri, on] = row.split('|');
           if (bri) {
-            return adjustLight(lightID, bri, function(err, hueResponse) {
+            return adjustLight(lightID, bri, function done(err, hueResponse) {
               if (err) {
                 return console.error(
                   `Error adjusting light ${lightID} to brightness ${bri}: ${err}`
@@ -50,25 +51,24 @@ router.post('/', (req, res) => {
               );
               return hueResponse;
             });
-          } else {
-            return toggleLight(lightID, on, function(err, hueResponse) {
-              if (err) {
-                return console.error(
-                  `Error toggling light ${lightID} to state on = ${on}: ${err}`
-                );
-              }
-              console.log(
-                `Successfully toggling light id ${lightID} to state = ${on} (0-254 range).\nHUE response: ${JSON.stringify(
-                  hueResponse,
-                  null,
-                  2
-                )}`
-              );
-
-              console.log('----------');
-              return hueResponse;
-            });
           }
+          return toggleLight(lightID, on, function done(err, hueResponse) {
+            if (err) {
+              return console.error(
+                `Error toggling light ${lightID} to state on = ${on}: ${err}`
+              );
+            }
+            console.log(
+              `Successfully toggling light id ${lightID} to state = ${on} (0-254 range).\nHUE response: ${JSON.stringify(
+                hueResponse,
+                null,
+                2
+              )}`
+            );
+
+            console.log('----------');
+            return hueResponse;
+          });
         })
     )
       .then(d => res.json(Array.from(d)))

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { Route, Switch } from 'react-router-dom';
 import Lights from '../Lights/Lights';
+import Water from '../Water/Water';
 import Nav from '../Nav/Nav';
 
 class App extends Component {
@@ -24,7 +25,8 @@ class App extends Component {
       <Container>
         <Nav />
         <Switch>
-          <Route path="/lights" component={Lights} />
+          <Route path="/water" component={Water} />
+          <Route path="/" component={Lights} />
         </Switch>
       </Container>
     );

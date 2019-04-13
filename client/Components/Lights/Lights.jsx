@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
+import LightWidget from '../LightWidget/LightWidget';
 // import PropTypes from 'prop-types';
 
 const Container = styled.div`
   width: 800px;
-  margin: auto;
-  border: 1px solid #ccc;
-`;
-
-const LightEntryContainer = styled.div`
-  width: 80%;
-  min-height: 80px;
   margin: auto;
 `;
 
@@ -18,6 +12,7 @@ const LightsContainer = styled.div`
   width: 100%;
   display: flex;
   flex-flow: column;
+  margin-bottom: 15px;
 `;
 
 const ScheduleContainer = styled.iframe`
@@ -36,18 +31,20 @@ class Lights extends Component {
   componentDidMount() {
     return fetch('/api/hue')
       .then(c => c.json())
-      .then(d => this.setState({ lights: d.lights }))
+      .then(lights => {
+        this.setState({
+          lights,
+        });
+      })
       .catch(e =>
         console.error(
-          `Error fetching HUE light data (/client/Components/Lights:23): ${e}`
+          `Error fetching HUE light data (/client/Components/Lights.jsx:43): ${e}`
         )
       );
   }
 
-  renderLights(lightsList) {
-    return lightsList.map(l => (
-      <LightEntryContainer>{JSON.stringify(l)}</LightEntryContainer>
-    ));
+  renderLights(lights) {
+    return Object.entries(lights).map(lightPair =>  <LightWidget light={lightPair[1]} name={lightPair[0]}/>);
   }
 
   render() {
