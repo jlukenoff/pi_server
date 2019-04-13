@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { LightWidgetContainer } from '../Styles/Styles';
@@ -9,8 +9,8 @@ const LightInfoContainer = styled.div``;
 const Switch = styled.div`
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 30px;
+  height: 17px;
 
   /* Hide default HTML checkbox */
   input {
@@ -35,8 +35,8 @@ const Switch = styled.div`
   .slider:before {
     position: absolute;
     content: '';
-    height: 26px;
-    width: 26px;
+    height: 13px;
+    width: 13px;
     left: 4px;
     bottom: 4px;
     background-color: white;
@@ -53,14 +53,14 @@ const Switch = styled.div`
   }
 
   input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(13px);
+    -ms-transform: translateX(13px);
+    transform: translateX(13px);
   }
 
   /* Rounded sliders */
   .slider.round {
-    border-radius: 34px;
+    border-radius: 17px;
   }
 
   .slider.round:before {
@@ -68,48 +68,34 @@ const Switch = styled.div`
   }
 `;
 
-class LightWidget extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      ...props,
-    };
-  }
-
-  render() {
-    const {
-      state: { light, name },
-    } = this;
-    return (
-      <LightWidgetContainer>
-        <LightInfoContainer>
-          Name: {name}
-          <br />
-          On: {light.state.on ? 'true' : 'false'}
-          <br />
-          reachable: {light.state.reachable ? 'true' : 'false'}
-        </LightInfoContainer>
-        <InputContainer>
-          <input
-            type="range"
-            min="0"
-            max="254"
-            value={light.state.bri}
-            onChange={e => console.log(e.target.value)}
-          />
-          <Switch>
-            <input
-              type="checkbox"
-              checked={light.state.reachable && light.state.on}
-            />
-            <span className="slider round" />
-          </Switch>
-        </InputContainer>
-      </LightWidgetContainer>
-    );
-  }
-}
+const LightWidget = ({ light, name }) => (
+  <LightWidgetContainer>
+    <LightInfoContainer>
+      Name: {name}
+      <br />
+      On: {light.state.on ? 'true' : 'false'}
+      <br />
+      reachable: {light.state.reachable ? 'true' : 'false'}
+    </LightInfoContainer>
+    <InputContainer>
+      <input
+        type="range"
+        min="0"
+        max="254"
+        value={light.state.bri}
+        onChange={e => console.log(e.target.value)}
+      />
+      <Switch>
+        <input
+          type="checkbox"
+          checked={light.state.reachable && light.state.on}
+          onChange={e => null}
+        />
+        <span className="slider round" />
+      </Switch>
+    </InputContainer>
+  </LightWidgetContainer>
+);
 
 LightWidget.propTypes = {
   light: PropTypes.object,
