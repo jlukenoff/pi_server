@@ -78,6 +78,8 @@ const LightWidget = ({ light, name }) => (
       reachable: {light.state.reachable ? 'true' : 'false'}
     </LightInfoContainer>
     <InputContainer>
+      Brightness: {100 * (light.state.bri / 254)}
+      <br />
       <input
         type="range"
         min="0"
@@ -85,6 +87,8 @@ const LightWidget = ({ light, name }) => (
         value={light.state.bri}
         onChange={e => console.log(e.target.value)}
       />
+      On/Off:
+      <br />
       <Switch>
         <input
           type="checkbox"
