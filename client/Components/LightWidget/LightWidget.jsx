@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { LightWidgetContainer } from '../Styles/Styles';
@@ -68,30 +68,43 @@ const Switch = styled.div`
   }
 `;
 
-const LightWidget = ({ light, name }) => (
-  <LightWidgetContainer>
-    <LightInfoContainer>
-      Name: {name}
-      <br />
-      On: {light.state.on ? 'true' : 'false'}
-      <br />
-      reachable: {light.state.reachable ? 'true' : 'false'}
-    </LightInfoContainer>
-    <InputContainer>
-      <input
-        type="range"
-        min="0"
-        max="254"
-        value={light.state.bri}
-        onChange={e => console.log(e.target.value)}
-      />
-      <Switch>
-        <input type="checkbox" />
-        <span className="slider round" />
-      </Switch>
-    </InputContainer>
-  </LightWidgetContainer>
-);
+class LightWidget extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      ...props,
+    };
+  }
+
+  render() {
+    const { light, name } = this;
+    return (
+      <LightWidgetContainer>
+        <LightInfoContainer>
+          Name: {name}
+          <br />
+          On: {light.state.on ? 'true' : 'false'}
+          <br />
+          reachable: {light.state.reachable ? 'true' : 'false'}
+        </LightInfoContainer>
+        <InputContainer>
+          <input
+            type="range"
+            min="0"
+            max="254"
+            value={light.state.bri}
+            onChange={e => console.log(e.target.value)}
+          />
+          <Switch>
+            <input type="checkbox" />
+            <span className="slider round" />
+          </Switch>
+        </InputContainer>
+      </LightWidgetContainer>
+    );
+  }
+}
 
 LightWidget.propTypes = {
   light: PropTypes.object,
