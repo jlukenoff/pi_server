@@ -78,7 +78,9 @@ class LightWidget extends Component {
   }
 
   render() {
-    const { light, name } = this;
+    const {
+      state: { light, name },
+    } = this;
     return (
       <LightWidgetContainer>
         <LightInfoContainer>
@@ -97,7 +99,10 @@ class LightWidget extends Component {
             onChange={e => console.log(e.target.value)}
           />
           <Switch>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={light.state.reachable && light.state.on}
+            />
             <span className="slider round" />
           </Switch>
         </InputContainer>
