@@ -9,6 +9,4 @@ const LightWidgetContainer = styled.div`
   justify-content: space-between;
 `;
 
-export default {
-  LightWidgetContainer,
-};
+export default { LightWidgetContainer };
