@@ -19,13 +19,13 @@ router.post('/:action', async (req, res) => {
 
   if (action.match(/toggle/i)) {
     try {
-      console.log('toggling');
       await toggleLight(id, on);
       return res.json(await getAllLights());
     } catch (e) {
       return res.json({ message: `Error toggling light: ${name}` });
     }
   } else if (action.match(/adjust/i)) {
+    console.log('received light adjust');
     try {
       await adjustLight(id, bri);
       return res.json(await getAllLights());

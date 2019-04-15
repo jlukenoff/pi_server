@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import LightWidget from '../LightWidget/LightWidget';
-// import PropTypes from 'prop-types';
+import debounce from '../../utils/index';
 
 const Container = styled.div`
   width: 800px;
@@ -25,18 +25,51 @@ class Lights extends Component {
 
     this.state = {
       lights: {},
+      lightSliderValues: {},
     };
 
     this.toggleOnOff = this.toggleOnOff.bind(this);
     this.handleLightAdjust = this.handleLightAdjust.bind(this);
+
+    this.adjustLight = debounce(name => {
+      const {
+        state: { lightSliderValues, lights },
+      } = this;
+
+      // console.log('name:', name);
+      const { id } = lights[name];
+
+      const payload = { id, name, bri: lightSliderValues[name] };
+      return fetch('/api/hue/adjust', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+        .then(c => c.json())
+        .then(() => console.log('success'))
+        .catch(e => console.error(`Error Adjusting Light ${name}: ${e}`));
+    }, 1000);
+
+    console.log('this.adjustLight:', this.adjustLight);
   }
 
   componentDidMount() {
     return fetch('/api/hue')
       .then(c => c.json())
       .then(lights => {
+        const lightSliderValues = Object.entries(lights).reduce(
+          (output, tuple) => {
+            output[tuple[0]] = tuple[1].state.bri;
+            return output;
+          },
+          {}
+        );
+        console.log('lightSliderValues:', lightSliderValues);
         this.setState({
           lights,
+          lightSliderValues,
         });
       })
       .catch(e =>
@@ -53,12 +86,6 @@ class Lights extends Component {
     const { id } = lights[name];
     const payload = { name, id, on: e.target.checked };
 
-    // console.log('e.target.checked:', e.target.checked);
-
-    console.log(
-      'JSON.stringify(payload, null, 2):',
-      JSON.stringify(payload, null, 2)
-    );
     return fetch('/api/hue/toggle', {
       method: 'post',
       headers: {
@@ -76,27 +103,16 @@ class Lights extends Component {
 
   handleLightAdjust(e, name) {
     const {
-      state: { lights },
-    } = this.state;
-    const { id } = lights[name];
-    const payload = { id, name, bri: e.target.value };
-
-    return fetch('/api/hue/adjust', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-      .then(c => c.json())
-      .then(res => {
-        return this.setState({ lights: res.lights });
-      })
-      .catch(err => console.error(`Error toggling light ${name}: ${err}`));
+      state: { lightSliderValues },
+    } = this;
+    lightSliderValues[name] = +e.target.value;
+    console.log('name:', name);
+    this.adjustLight(name);
+    this.setState({ lightSliderValues });
   }
 
   render() {
-    const { lights } = this.state;
+    const { lights, lightSliderValues } = this.state;
     return (
       <Container>
         <LightsContainer>
@@ -106,6 +122,7 @@ class Lights extends Component {
                 light={lightPair[1]}
                 name={lightPair[0]}
                 checked={lightPair[1].state.on}
+                sliderValue={lightSliderValues[lightPair[0]]}
                 handleLightAdjust={this.handleLightAdjust}
                 toggleOnOff={this.toggleOnOff}
               />

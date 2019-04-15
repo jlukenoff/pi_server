@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-// import { debounce } from '../../utils';
+
 import { LightWidgetContainer } from '../Styles/Styles';
 
 const InputContainer = styled.div``;
@@ -74,10 +74,8 @@ const LightWidget = ({
   name,
   toggleOnOff,
   handleLightAdjust,
-  checked,
+  sliderValue,
 }) => {
-  // handleLightAdjust = debounce(handleLightAdjust, 1000);
-  console.log('checked:', !!(light.state.reachable && light.state.on));
   return (
     <LightWidgetContainer>
       <LightInfoContainer>
@@ -92,13 +90,12 @@ const LightWidget = ({
           type="range"
           min="0"
           max="254"
-          value={light.state.bri}
+          value={sliderValue}
           onChange={e => handleLightAdjust(e, name)}
         />
         <Switch>
           <input
             type="checkbox"
-            // value={!!(light.state.reachable && light.state.on)}
             checked={!!(light.state.reachable && light.state.on)}
             onChange={e => toggleOnOff(e, name)}
           />
@@ -114,13 +111,12 @@ LightWidget.propTypes = {
   name: PropTypes.string,
   toggleOnOff: PropTypes.func.isRequired,
   handleLightAdjust: PropTypes.func.isRequired,
-  checked: PropTypes.bool,
+  sliderValue: PropTypes.number.isRequired,
 };
 
 LightWidget.defaultProps = {
   light: {},
   name: '',
-  checked: false,
 };
 
 export default LightWidget;

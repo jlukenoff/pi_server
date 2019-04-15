@@ -1,6 +1,7 @@
-const debounce = (func, wait, immediate, ...args) => {
+const debounce = (func, wait, immediate) => {
+  console.log('called debounce');
   let timeout;
-  return function callback() {
+  return function callback(...args) {
     const context = this;
     const later = () => {
       timeout = null;
@@ -13,4 +14,4 @@ const debounce = (func, wait, immediate, ...args) => {
   };
 };
 
-export default { debounce };
+export default debounce;
