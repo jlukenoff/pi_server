@@ -24,8 +24,11 @@ class Lights extends Component {
     super(props);
 
     this.state = {
-      lights: [],
+      lights: {},
     };
+
+    this.toggleOnOff = this.toggleOnOff.bind(this);
+    this.handleLightAdjust = this.handleLightAdjust.bind(this);
   }
 
   componentDidMount() {
@@ -43,15 +46,71 @@ class Lights extends Component {
       );
   }
 
-  renderLights(lights) {
-    return Object.entries(lights).map(lightPair =>  <LightWidget light={lightPair[1]} name={lightPair[0]}/>);
+  toggleOnOff(e, name) {
+    const {
+      state: { lights },
+    } = this;
+    const { id } = lights[name];
+    const payload = { name, id, on: e.target.checked };
+
+    // console.log('e.target.checked:', e.target.checked);
+
+    console.log(
+      'JSON.stringify(payload, null, 2):',
+      JSON.stringify(payload, null, 2)
+    );
+    return fetch('/api/hue/toggle', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(c => c.json())
+      .then(res => {
+        console.log('res:', res);
+        return this.setState({ lights: res });
+      })
+      .catch(err => console.error(`Error toggling light ${name}: ${err}`));
+  }
+
+  handleLightAdjust(e, name) {
+    const {
+      state: { lights },
+    } = this.state;
+    const { id } = lights[name];
+    const payload = { id, name, bri: e.target.value };
+
+    return fetch('/api/hue/adjust', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(c => c.json())
+      .then(res => {
+        return this.setState({ lights: res.lights });
+      })
+      .catch(err => console.error(`Error toggling light ${name}: ${err}`));
   }
 
   render() {
     const { lights } = this.state;
     return (
       <Container>
-        <LightsContainer>{lights && this.renderLights(lights)}</LightsContainer>
+        <LightsContainer>
+          {lights &&
+            Object.entries(lights).map(lightPair => (
+              <LightWidget
+                light={lightPair[1]}
+                name={lightPair[0]}
+                checked={lightPair[1].state.on}
+                handleLightAdjust={this.handleLightAdjust}
+                toggleOnOff={this.toggleOnOff}
+              />
+            ))}
+        </LightsContainer>
         <ScheduleContainer
           title="Schedule"
           src="https://calendar.google.com/calendar/embed?src=vcdf9rcs3t08i69aun44r3f394%40group.calendar.google.com&ctz=America%2FLos_Angeles"
