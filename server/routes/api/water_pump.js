@@ -4,7 +4,12 @@ const fetch = require('node-fetch');
 const router = express.Router();
 
 router.post('/', (req, res) => {
-  const { timeOn } = req.body;
+  let { timeOn } = req.body;
+  const { ouncesToWater } = req.body;
+
+  if (!timeOn && ouncesToWater) {
+    timeOn = ouncesToWater * 3300;
+  }
 
   console.log(`Time to remain on: ${timeOn}`);
   const requestBody = JSON.stringify({ timeOn });
