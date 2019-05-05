@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
-const { HUE_USERNAME } = require('../credentials.json');
+
+const { HUE_USERNAME } = process.env;
 
 const getAllLights = () =>
   fetch(`http://10.0.0.218/api/${HUE_USERNAME}/lights`)

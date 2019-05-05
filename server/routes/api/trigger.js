@@ -1,16 +1,13 @@
 const express = require('express');
 
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 // modules for interacting w/the HUE bridge api
-const { getAllLights, adjustLight, toggleLight } = require('./hue_controls');
-const { authToken } = require('./credentials.json');
-const textParser = require('body-parser').text();
+const { AUTH_TOKEN } = process.env;
 
 // router.use(textParser);
 
 const atob = require('atob');
+const { getAllLights, adjustLight, toggleLight } = require('./hue_controls');
 
 // POST - used to toggle or adjust lights from a calendar event
 router.post('/', (req, res) => {
@@ -23,7 +20,7 @@ router.post('/', (req, res) => {
   const token = req.header('Authorization');
   const unamePass = atob(token.split(' ')[1]);
   console.log(unamePass);
-  if (unamePass !== authToken) {
+  if (unamePass !== AUTH_TOKEN) {
     return res.sendStatus(401);
   }
 
@@ -36,7 +33,7 @@ router.post('/', (req, res) => {
         .map(row => {
           const [lightID, bri, on] = row.split('|');
           if (bri) {
-            return adjustLight(lightID, bri, function done(err, hueResponse) {
+            return adjustLight(lightID, bri, (err, hueResponse) => {
               if (err) {
                 return console.error(
                   `Error adjusting light ${lightID} to brightness ${bri}: ${err}`
@@ -52,7 +49,7 @@ router.post('/', (req, res) => {
               return hueResponse;
             });
           }
-          return toggleLight(lightID, on, function done(err, hueResponse) {
+          return toggleLight(lightID, on, (err, hueResponse) => {
             if (err) {
               return console.error(
                 `Error toggling light ${lightID} to state on = ${on}: ${err}`

@@ -3,3 +3,4 @@ bundle.**
 coverage
 credentials.json
 Dockerfile
+.env
