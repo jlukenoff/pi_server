@@ -13,95 +13,63 @@ const textParser = require('body-parser').text();
 const atob = require('atob');
 
 // POST - used to toggle or adjust lights from a calendar event
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   console.log(req.body);
-  const { service, csvArgs } = req.body;
+  const { deviceType, commandString } = req.body;
 
-  // The above is a hack used to remove escape characters from the automate.io service payload
+  // if typeLights
+  if (deviceType.match(/lights/i)) {
+    const lights = await getAllLights();
 
-  console.log(req.headers);
-  const token = req.header('Authorization');
-  const unamePass = atob(token.split(' ')[1]);
-  console.log(unamePass);
-  if (unamePass !== authToken) {
-    return res.sendStatus(401);
-  }
+    const lightsByName = Object.entries(lights).reduce((output, lightTuple) => {
+      const lightID = lightTuple[0];
+      const lightObj = lightTuple[1];
+      lightObj.id = lightID;
+      output[lightObj.name.toLowerCase()] = lightObj;
+      return output;
+    }, {});
 
-  if (service === 'LIGHT') {
-    console.log(csvArgs);
-    Promise.all(
-      csvArgs
-        .split('\n')
-        .slice(1)
-        .map(row => {
-          const [lightID, bri, on] = row.split('|');
-          if (bri) {
-            return adjustLight(lightID, bri, function done(err, hueResponse) {
-              if (err) {
-                return console.error(
-                  `Error adjusting light ${lightID} to brightness ${bri}: ${err}`
-                );
-              }
-              console.log(
-                `Successfully adjusted light id ${lightID} to brightness ${bri} (0-254 range).\nHUE response: ${JSON.stringify(
-                  hueResponse,
-                  null,
-                  2
-                )}`
-              );
-              return hueResponse;
-            });
-          }
-          return toggleLight(lightID, on, function done(err, hueResponse) {
-            if (err) {
-              return console.error(
-                `Error toggling light ${lightID} to state on = ${on}: ${err}`
-              );
-            }
-            console.log(
-              `Successfully toggling light id ${lightID} to state = ${on} (0-254 range).\nHUE response: ${JSON.stringify(
-                hueResponse,
-                null,
-                2
-              )}`
+    console.log('commandString:', commandString);
+    const [lightName, on, time, brightness] = commandString.slice('\n');
+
+    console.log('lightName:', lightName);
+    const lightObj = lightsByName[lightName.toLowerCase()];
+    const {
+      state: { on: previousOn, bri: previousBri },
+    } = lightObj;
+
+    try {
+      const responses = Promise.all([
+        await toggleLight(lightObj.id, !!on.match(/on/i)),
+        await adjustLight(lightObj.id, +brightness),
+      ]);
+      if (time) {
+        const [timeInt, timeUnit] = time.split(' ');
+
+        let timeTillReversion = 0;
+
+        if (timeUnit.match(/hour/i)) {
+          timeTillReversion = +timeInt * 60 * 60 * 1000;
+        } else if (timeUnit.match(/minute/i)) {
+          timeTillReversion = +timeInt * 60 * 1000;
+        }
+        setTimeout(async () => {
+          try {
+            return await Promise.all([
+              await toggleLight(lightObj.id, previousOn),
+              await adjustLight(lightObj.id, +previousBri),
+            ]);
+          } catch (err) {
+            return console.error(
+              `Error reverting light state for ${lightName}: ${err}`
             );
-
-            console.log('----------');
-            return hueResponse;
-          });
-        })
-    )
-      .then(d => res.json(Array.from(d)))
-      .catch(e =>
-        console.error(
-          `Error updating lights (/server/routes/api/trigger:73): ${e}`
-        )
-      );
-  } else {
-    return res.sendStatus(422);
-  }
-
-  // write to logs
-  /*  fs.appendFile(
-    '../../data/events.csv',
-    `${[
-      service,
-      csvArgs,
-      createdBy,
-      createdAt,
-      beginsAt,
-      new Date().toISOString(),
-    ].join(',')}\n`,
-    function(err) {
-      if (err) return console.error(`Error writing to log: ${err}`);
-      console.log(
-        `successfully processed payload: ${JSON.stringify(req.body, null, 2)}`
-      );
-      console.log('SUCCESS: wrote to logs');
-      res.send(
-        `SUCCESS: received payload - ${JSON.stringify(req.body, null, 2)}`
-      );
+          }
+        }, timeTillReversion);
+      }
+      return responses;
+    } catch (err) {
+      return console.error(`Error toggling lights`);
     }
-  ); */
+  }
 });
 module.exports = router;

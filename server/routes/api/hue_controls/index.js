@@ -14,15 +14,22 @@ const getAllLights = () =>
     )
     .catch(err => console.error(`Error fetching HUE light data: ${err}`));
 
-const adjustLight = (lightID, bri) => {
+const adjustLight = async (lightID, bri) => {
   bri = typeof bri === 'number' ? bri : Number(bri);
-  return fetch(
-    `http://10.0.0.218/api/${HUE_USERNAME}/lights/${lightID}/state`,
-    {
-      method: 'PUT',
-      body: JSON.stringify({ bri }),
-    }
-  ).then(chunk => chunk.json());
+  try {
+    const response = await fetch(
+      `http://10.0.0.218/api/${HUE_USERNAME}/lights/${lightID}/state`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ bri }),
+      }
+    );
+
+    const body = await response.json();
+    return body;
+  } catch (err) {
+    return console.error(`Error adjusting light ${lightID}: ${err}`);
+  }
 };
 
 const toggleLight = (lightID, on) => {

@@ -7,6 +7,8 @@ router.post('/', (req, res) => {
   let { timeOn } = req.body;
   const { ouncesToWater } = req.body;
 
+  console.log('timeOn, ouncesToWater:', timeOn, ouncesToWater);
+
   if (!timeOn && ouncesToWater) {
     timeOn = ouncesToWater * 3300;
   }
