@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  pi_server:
+    build: ./
+    depends_on:
+      - 'database'
+    ports:
+      - '8080:8080'
+    environment:
+      - HUE_USERNAME=${HUE_USERNAME}
+      - AUTH_STRING=${AUTH_STRING}
+  database:
+    image: mongo:latest

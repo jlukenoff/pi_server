@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const SALT_WORK_FACTOR = 10;
-
-mongoose.connect('mongodb://127.0.0.1/pi_db', { useNewUrlParser: true });
+const isDev = process.env.NODE_ENV !== 'production'
+mongoose.connect(`mongodb://${isDev ? '127.0.0.1' : 'database'}/pi_db`, { useNewUrlParser: true });
 
 const { Schema } = mongoose;
 
@@ -23,8 +23,6 @@ UserSchema.pre('save', function hashPassword(next) {
     return bcrypt.hash(user.password, salt, (e, hash) => {
       if (e) return next(e);
       user.password = hash;
-      console.log('successfully modified password:', user.password);
-      console.log('output hash:', hash);
       return next();
     });
   });
